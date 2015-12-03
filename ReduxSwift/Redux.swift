@@ -8,15 +8,59 @@
 
 import Foundation
 
-typealias AppState = [String: Any]
-
 class Redux {
     
     /**
-     Combines multiple reducers
+     Create a store enhancer that applies middleware to the dispatch method of
+     the store
+     
+     - Parameter middlewares: The list of middlewares
+     
+     - Returns: A store enhancer applying the middleware to the dispatch method.
+     */
+    static func applyMiddleware(middlewares: [Middleware]) -> StoreEnhancer {
+        
+        return { (next: StoreMaker) -> StoreMaker in
+            
+            return { (initialState: State, reducer: Reducer) -> Store in
+                let store = next(initialState: initialState, reducer: reducer)
+                var dispatch = store.dispatch
+                
+                func wrappedDispatch(action: Action) throws -> Action {
+                    return try dispatch(action: action)
+                }
+                
+                let middlewareStore = MiddlewareStore(
+                    dispatch: wrappedDispatch,
+                    state: store.getState
+                )
+                
+                let middlewareFunks = middlewares.map { ware in
+                    ware(store: middlewareStore)
+                }
+                
+                dispatch = compose(middlewareFunks)(store.dispatch)
+                
+                return Store(
+                    dispatch: dispatch,
+                    getState: store.getState,
+                    subscribe: store.subscribe
+                )
+            }
+            
+        }
+        
+    }
+    
+    /**
+     Reduces multiple reducer into a single reducer.
+     
+     - Parameter reducers: The list of reducers to combine.
+     
+     - Returns: A combined reducer.
     */
     static func combineReducers(reducers: [String: Reducer]) -> Reducer {
-        var initialState = [String: Any]();
+        var initialState = AppState();
         
         func combined(state: State, action: Action) -> AppState {
             var appState = state as! AppState;
@@ -35,12 +79,20 @@ class Redux {
         return combined
     }
     
+    /**
+     Creates a new store
+     
+     - Parameter initialState: The initial app state
+     - Parameter reducer: The reducer used during dispatching.
+     
+     - Returns: The newly created store.
+     */
     static func createStore(initialState: State, reducer: Reducer) -> Store {
         var dispatching = false
         var subscribers = [Empty]()
         var currentState = initialState
 
-        func state() -> State {
+        func getState() -> State {
             return currentState
         }
         
@@ -80,11 +132,11 @@ class Redux {
             return unsubscribe
         }
         
-        let store = Store()
-        store.state = state
-        store.dispatch = dispatch
-        store.subscribe = subscribe
-        return store
+        return Store(
+            dispatch: dispatch,
+            getState: getState,
+            subscribe: subscribe
+        )
     }
     
 }

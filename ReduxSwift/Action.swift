@@ -10,11 +10,11 @@ import Foundation
 
 typealias Payload = Any
 
-struct Types {
-    static let Empty = "Empty"
+struct ActionTypes {
+    static let Init = "Init"
 }
 
-class Action {
+class Action: CustomStringConvertible {
     var payload: Payload?
     var type: String
     
@@ -23,7 +23,7 @@ class Action {
         self.type = type;
     }
     
-    init() {
-        self.type = Types.Empty
+    var description: String {
+        return "[\"type\": \(self.type), \"payload\": \(self.payload)]"
     }
 }

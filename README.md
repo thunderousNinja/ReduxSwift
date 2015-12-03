@@ -43,8 +43,6 @@ let combinedReducer = Redux.combineReducers([
     "name": nameReducer,
 ])
 ```
-
-
 ### Creating stores
 
 ```swift
@@ -69,23 +67,23 @@ let store = Redux.createStore(
 ```swift
 
 // Initial state
-let appState = store.state() as! [String: Any]
+let appState = store.getState() as! [String: Any]
 print(appState["count"]) // 0
 print(appState["name"]) // Jon Snow
 
 // Dispatch an action to change the name
 store.dispatch(action: Action(payload: "Tyrion Lannister", type: "ChangeName"))
-appState = store.state() as! [String: Any]
+appState = store.getState() as! [String: Any]
 print(appState["name"]) // Tyrion Lannister
 
 // Dispatch an action to increment the count
 store.dispatch(action: Action(payload: nil, type: "Increment"))
-appState = store.state() as! [String: Any]
+appState = store.getState() as! [String: Any]
 print(appState["count"]) // 1
 
 // Dispatch an action to decrement the count
 store.dispatch(action: Action(payload: nil, type: "Decrement"))
-appState = store.state() as! [String: Any]
+appState = store.getState() as! [String: Any]
 print(appState["count"]) // 0
 
 ```
@@ -93,7 +91,6 @@ print(appState["count"]) // 0
 ### Subscribing/Unsubscribing to the store
 
 ```swift
-
 // Subscribe to store changes
 let unsubscribe = store.subscribe() {
     // handle store changes here
@@ -101,12 +98,48 @@ let unsubscribe = store.subscribe() {
 
 // Unsubscribe to store changes
 unsubscribe()
-
 ```
 
-## TODOs
+### Creating & applying middleware
 
-- [ ] More tests
-- [ ] Carthage support 
-- [ ] CocoaPods support 
-- [ ] Middleware support 
+```swift
+
+// Create the middleware function
+
+func loggingMiddleware(store: MiddlewareStore) -> DispatchFunction {
+    return { (next: Dispatch) in
+        return { (action: Action) in
+            print("---")
+            print("prev state: \(store.getState())")
+            print("action: \(action)")
+            let returnValue = try next(action: action)
+            print("next state: \(store.getState())")
+            print("---")
+            return returnValue
+        }
+    }
+}
+
+// Apply the middleware
+
+let storeEnhancer = Redux.applyMiddleware([loggingMiddleware])
+let enhanceStore = storeEnhancer(Redux.createStore)
+
+// Create the store from the created `enhanceStore` function
+let store = enhanceStore(
+    initialState: initialState(), 
+    reducer: combinedReducer
+)
+
+// Use the store as normal!
+
+store.dispatch(action: Action(payload: nil, type: "Increment"))
+// Output: 
+//
+// ---
+// prev state: ["count": 0, "name": "Jon Snow"]
+// action: ["type": Increment, "payload": nil]
+// next state: ["count": 1, "name": "Jon Snow"]
+// ---
+
+```

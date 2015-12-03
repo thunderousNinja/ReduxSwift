@@ -38,10 +38,12 @@ class ReduxSwiftTests: XCTestCase {
     }
     
     func testIncrementCount() {
+        
         let combinedReducer = Redux.combineReducers([
             "count": countReducer,
             "name": nameReducer,
-            ])
+        ])
+        
         let store: Store = Redux.createStore(initialState(), reducer: combinedReducer)
         var state = appState(store)
         do {
@@ -125,7 +127,7 @@ class ReduxSwiftTests: XCTestCase {
     }
     
     func appState(store: Store) -> AppState {
-        return store.state() as! AppState
+        return store.getState() as! AppState
     }
     
     func nameReducer(previousState: Any, action: Action) -> String {

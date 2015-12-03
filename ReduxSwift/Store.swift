@@ -8,34 +8,24 @@
 
 import Foundation
 
-typealias Dispatch = (action: Action) throws -> Action
-typealias Empty = () -> Void
-typealias Reducer = (previousState: State, action: Action) -> State
-typealias State = Any
-typealias StoreState = () -> State
-typealias Subscribe = (subscribe: Empty) -> Empty
-
-class Store {
+public class Store {
     var dispatch: Dispatch
-    var state: StoreState
+    var getState: StoreState
     var subscribe: Subscribe?
     
-    init() {
-        self.dispatch = defaultDispatch
-        self.state = defaultState
-    }
-    
-    init(dispatch: Dispatch, state: () -> State, subscribe: Subscribe) {
+    init(dispatch: Dispatch, getState: () -> State, subscribe: Subscribe?) {
         self.dispatch = dispatch
-        self.state = state
+        self.getState = getState
         self.subscribe = subscribe
     }
 }
 
-func defaultDispatch(action: Action) throws -> Action {
-   return Action()
-}
-
-func defaultState() -> State {
-    return [String: Any]()
+public class MiddlewareStore {
+    var dispatch: Dispatch
+    var getState: StoreState
+    
+    init(dispatch: Dispatch, state: () -> State) {
+        self.dispatch = dispatch
+        self.getState = state
+    }
 }
