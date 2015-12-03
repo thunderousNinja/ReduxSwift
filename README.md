@@ -123,18 +123,19 @@ func loggingMiddleware(store: MiddlewareStore) -> DispatchFunction {
 // Apply the middleware
 
 let storeEnhancer = Redux.applyMiddleware([loggingMiddleware])
-let enhanceStore = storeEnhancer(Redux.createStore)
+let storeMaker = storeEnhancer(Redux.createStore)
 
-// Create the store from the created `enhanceStore` function
-let store = enhanceStore(
+// Create the store from the created `storeMaker` function
+
+let store = storeMaker(
     initialState: initialState(), 
     reducer: combinedReducer
 )
 
-// Use the store as normal!
+// Use the store
 
 store.dispatch(action: Action(payload: nil, type: "Increment"))
-// Output: 
+// Output in console: 
 //
 // ---
 // prev state: ["count": 0, "name": "Jon Snow"]
