@@ -132,6 +132,12 @@ class Redux {
             return unsubscribe
         }
         
+        do {
+            try dispatch(Action(payload: nil, type: ActionTypes.Init))
+        } catch {
+            print("Unable to dispatch Init action");
+        }
+        
         return Store(
             dispatch: dispatch,
             getState: getState,

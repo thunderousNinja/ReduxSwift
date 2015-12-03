@@ -83,14 +83,14 @@
 		68C9D8B61C0EFF9D00D44CF0 /* ReduxSwift */ = {
 			isa = PBXGroup;
 			children = (
-				68C9D8B71C0EFF9D00D44CF0 /* ReduxSwift.h */,
-				683BA3F31C0FD6030071B22C /* Error.swift */,
 				683BA3F51C0FD6420071B22C /* Action.swift */,
-				683BA3F61C0FD6420071B22C /* Redux.swift */,
-				683BA3F71C0FD6420071B22C /* Store.swift */,
-				68C9D8B91C0EFF9D00D44CF0 /* Info.plist */,
-				683BA3FB1C1008740071B22C /* Utils.swift */,
+				683BA3F31C0FD6030071B22C /* Error.swift */,
 				683BA3FD1C100D370071B22C /* Middlewares.swift */,
+				683BA3F61C0FD6420071B22C /* Redux.swift */,
+				68C9D8B71C0EFF9D00D44CF0 /* ReduxSwift.h */,
+				683BA3F71C0FD6420071B22C /* Store.swift */,
+				683BA3FB1C1008740071B22C /* Utils.swift */,
+				68C9D8B91C0EFF9D00D44CF0 /* Info.plist */,
 			);
 			path = ReduxSwift;
 			sourceTree = "<group>";
