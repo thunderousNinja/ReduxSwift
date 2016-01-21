@@ -8,8 +8,11 @@
 
 import Foundation
 
-func loggingMiddleware(store: MiddlewareStore) -> DispatchFunction {
-    return { (next: Dispatch) -> Dispatch in
+typealias MiddlewareReturnFunction = (StoreDispatchFunction) -> StoreDispatchFunction
+typealias MiddlewareFunction = (store: MiddlewareStore) -> MiddlewareReturnFunction
+
+func loggingMiddleware(store: MiddlewareStore) -> MiddlewareReturnFunction {
+    return { (next: StoreDispatchFunction) -> StoreDispatchFunction in
         return { (action: Action) -> Action in
             print("---")
             print("prev state: \(store.getState())")

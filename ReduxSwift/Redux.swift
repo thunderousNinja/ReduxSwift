@@ -8,6 +8,10 @@
 
 import Foundation
 
+typealias ReducerFunction = (previousState: State, action: Action) -> State
+typealias StoreMakerFunction = (initialState: State, reducer: ReducerFunction) -> Store
+typealias StoreEnhancerFunction = (StoreMakerFunction) -> StoreMakerFunction
+
 class Redux {
     
     /**
@@ -18,11 +22,11 @@ class Redux {
      
      - Returns: A store enhancer applying the middleware to the dispatch method.
      */
-    static func applyMiddleware(middlewares: [Middleware]) -> StoreEnhancer {
+    static func applyMiddleware(middlewares: [MiddlewareFunction]) -> StoreEnhancerFunction {
         
-        return { (next: StoreMaker) -> StoreMaker in
+        return { (next: StoreMakerFunction) -> StoreMakerFunction in
             
-            return { (initialState: State, reducer: Reducer) -> Store in
+            return { (initialState: State, reducer: ReducerFunction) -> Store in
                 let store = next(initialState: initialState, reducer: reducer)
                 var dispatch = store.dispatch
                 
@@ -59,7 +63,7 @@ class Redux {
      
      - Returns: A combined reducer.
     */
-    static func combineReducers(reducers: [String: Reducer]) -> Reducer {
+    static func combineReducers(reducers: [String: ReducerFunction]) -> ReducerFunction {
         var initialState = AppState();
         
         func combined(state: State, action: Action) -> AppState {
@@ -87,9 +91,9 @@ class Redux {
      
      - Returns: The newly created store.
      */
-    static func createStore(initialState: State, reducer: Reducer) -> Store {
+    static func createStore(initialState: State, reducer: ReducerFunction) -> Store {
         var dispatching = false
-        var subscribers = [Empty]()
+        var subscribers = [EmptyFunction]()
         var currentState = initialState
 
         func getState() -> State {
@@ -114,7 +118,7 @@ class Redux {
             return action
         }
         
-        func subscribe(subscribe: Empty) -> Empty {
+        func subscribe(subscribe: EmptyFunction) -> EmptyFunction {
             subscribers.append(subscribe)
             var index = subscribers.count - 1
             var subscribed = true

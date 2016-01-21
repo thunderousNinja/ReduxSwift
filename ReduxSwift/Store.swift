@@ -8,12 +8,16 @@
 
 import Foundation
 
+typealias StoreDispatchFunction = (action: Action) throws -> Action
+typealias StoreGetStateFunction = () -> Any
+typealias StoreSubscribeFunction = (subscribe: EmptyFunction) -> EmptyFunction
+
 public class Store {
-    var dispatch: Dispatch
-    var getState: StoreState
-    var subscribe: Subscribe?
+    var dispatch: StoreDispatchFunction
+    var getState: StoreGetStateFunction
+    var subscribe: StoreSubscribeFunction?
     
-    init(dispatch: Dispatch, getState: () -> State, subscribe: Subscribe?) {
+    init(dispatch: StoreDispatchFunction, getState: StoreGetStateFunction, subscribe: StoreSubscribeFunction?) {
         self.dispatch = dispatch
         self.getState = getState
         self.subscribe = subscribe
@@ -21,10 +25,10 @@ public class Store {
 }
 
 public class MiddlewareStore {
-    var dispatch: Dispatch
-    var getState: StoreState
+    var dispatch: StoreDispatchFunction
+    var getState: StoreGetStateFunction
     
-    init(dispatch: Dispatch, state: () -> State) {
+    init(dispatch: StoreDispatchFunction, state: StoreGetStateFunction) {
         self.dispatch = dispatch
         self.getState = state
     }

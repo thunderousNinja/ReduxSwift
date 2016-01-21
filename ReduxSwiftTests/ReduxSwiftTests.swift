@@ -109,7 +109,7 @@ class ReduxSwiftTests: XCTestCase {
         }
     }
     
-    func countReducer(previousState: Any, action: Action) -> Int {
+    func countReducer(previousState: State, action: Action) -> Int {
         var count = previousState as! Int;
         
         switch action.type {

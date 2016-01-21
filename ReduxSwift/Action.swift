@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias ActionPayload = AnyObject
+typealias ActionPayload = Any
 typealias ActionType = String
 
 struct ActionTypes {

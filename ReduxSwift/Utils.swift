@@ -9,16 +9,8 @@
 import Foundation
 
 typealias AppState = [String: Any]
-typealias Empty = () -> Void
-typealias Dispatch = (action: Action) throws -> Action
-typealias DispatchFunction = (Dispatch) -> Dispatch
-typealias Middleware = (store: MiddlewareStore) -> DispatchFunction
-typealias Reducer = (previousState: State, action: Action) -> State
 typealias State = Any
-typealias StoreEnhancer = (StoreMaker) -> StoreMaker
-typealias StoreMaker = (initialState: State, reducer: Reducer) -> Store
-typealias StoreState = () -> State
-typealias Subscribe = (subscribe: Empty) -> Empty
+typealias EmptyFunction = () -> Void
 
 /**
  * Composes single-argument functions from right to left.
