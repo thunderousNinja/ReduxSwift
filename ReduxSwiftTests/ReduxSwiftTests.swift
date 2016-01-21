@@ -48,16 +48,16 @@ class ReduxSwiftTests: XCTestCase {
         var state = appState(store)
         do {
             XCTAssertTrue(state["count"] as! Int == 0)
-            try store.dispatch(action: Action(payload: nil, type: "Increment"))
+            try store.dispatch(action: StandardAction(payload: nil, type: "Increment"))
             
             state = appState(store)
             XCTAssertTrue(state["count"] as! Int == 1)
             
-            try store.dispatch(action: Action(payload: nil, type: "Increment"))
+            try store.dispatch(action: StandardAction(payload: nil, type: "Increment"))
             state = appState(store)
             XCTAssertTrue(state["count"] as! Int == 2)
             
-            try store.dispatch(action: Action(payload: nil, type: "Increment"))
+            try store.dispatch(action: StandardAction(payload: nil, type: "Increment"))
             state = appState(store)
             XCTAssertTrue(state["count"] as! Int == 3)
         } catch {
@@ -75,15 +75,15 @@ class ReduxSwiftTests: XCTestCase {
         do {
             XCTAssertTrue(state["count"] as! Int == 0)
             
-            try store.dispatch(action: Action(payload: nil, type: "Increment"))
+            try store.dispatch(action: StandardAction(payload: nil, type: "Increment"))
             state = appState(store)
             XCTAssertTrue(state["count"] as! Int == 1)
             
-            try store.dispatch(action: Action(payload: nil, type: "Increment"))
+            try store.dispatch(action: StandardAction(payload: nil, type: "Increment"))
             state = appState(store)
             XCTAssertTrue(state["count"] as! Int == 2)
             
-            try store.dispatch(action: Action(payload: nil, type: "Decrement"))
+            try store.dispatch(action: StandardAction(payload: nil, type: "Decrement"))
             state = appState(store)
             XCTAssertTrue(state["count"] as! Int == 1)
         } catch {
@@ -101,7 +101,7 @@ class ReduxSwiftTests: XCTestCase {
         do {
             XCTAssertTrue(state["name"] as! String == "jon")
             
-            try store.dispatch(action: Action(payload: "jonathan", type: "Change"))
+            try store.dispatch(action: StandardAction(payload: "jonathan", type: "Change"))
             state = appState(store)
             XCTAssertTrue(state["name"] as! String == "jonathan")
         } catch {

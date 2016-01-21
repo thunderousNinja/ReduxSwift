@@ -133,7 +133,7 @@ class Redux {
         }
         
         do {
-            try dispatch(Action(payload: nil, type: ActionTypes.Init))
+            try dispatch(StandardAction(payload: nil, type: ActionTypes.Init))
         } catch {
             print("Unable to dispatch Init action");
         }

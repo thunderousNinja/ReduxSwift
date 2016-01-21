@@ -8,22 +8,24 @@
 
 import Foundation
 
-typealias Payload = Any
+typealias ActionPayload = AnyObject
+typealias ActionType = String
 
 struct ActionTypes {
     static let Init = "Init"
 }
 
-class Action: CustomStringConvertible {
-    var payload: Payload?
-    var type: String
-    
-    init(payload: Payload?, type: String) {
-        self.payload = payload;
-        self.type = type;
-    }
-    
-    var description: String {
-        return "[\"type\": \(self.type), \"payload\": \(self.payload)]"
+protocol Action {
+    var payload: ActionPayload? { get set }
+    var type: ActionType { get set }
+    init(payload: ActionPayload?, type: ActionType)
+}
+
+struct StandardAction: Action {
+    var type: ActionType
+    var payload: ActionPayload?
+    init(payload: ActionPayload?, type: ActionType) {
+        self.payload = payload
+        self.type = type
     }
 }
